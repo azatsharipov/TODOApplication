@@ -7,11 +7,13 @@ import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
@@ -30,13 +32,15 @@ public class MainActivity extends AppCompatActivity {
         rv = findViewById(R.id.rv);
         setDoings();
         adapter = new DoAdapter(doings);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayout.VERTICAL);
+        rv.addItemDecoration(dividerItemDecoration);
         rv.setAdapter(adapter);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                doings.add(new Doing("New", ""));
+                adapter.notifyDataSetChanged();
             }
         });
     }
@@ -44,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     public void setDoings() {
         doings = new ArrayList<>();
         doings.add(new Doing("First Header", "Some text in my application"));
-        doings.add(new Doing("Second Header", "2 some long text in my application"));
+        doings.add(new Doing("Second very very very very very very long Header", "2 some very very very very very long text in my application and 2 some very very very very very long text in my application"));
     }
 
     @Override

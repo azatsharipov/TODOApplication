@@ -1,5 +1,6 @@
 package com.example.todoapplication;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +29,28 @@ public class DoAdapter extends RecyclerView.Adapter<DoAdapter.MyViewHolder> {
     }
 
     @Override
-    public DoAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public DoAdapter.MyViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.doing_item, parent, false);
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), EditActivity.class);
+                TextView tv = (TextView)view.findViewById(R.id.header);
+                String header = tv.getText().toString();
+                intent.putExtra("HEADER", header);
+                tv = (TextView)view.findViewById(R.id.doing_text);
+                String doingText = tv.getText().toString();
+                intent.putExtra("DOING", doingText);
+                view.getContext().startActivity(intent);
+            }
+        });
+        v.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                return true;
+            }
+        });
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
 
