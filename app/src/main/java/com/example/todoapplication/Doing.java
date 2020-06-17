@@ -3,6 +3,7 @@ package com.example.todoapplication;
 public class Doing {
     private String header;
     private String text;
+    private boolean isSelected;
     private float time;
 
 
@@ -10,6 +11,7 @@ public class Doing {
         this.header = header;
         this.text = text;
         this.time = 0f;
+        this.isSelected = false;
     }
 
     public String getHeader() {
@@ -34,5 +36,13 @@ public class Doing {
 
     public void setTime(float time) {
         this.time = time;
+    }
+
+    public boolean getSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

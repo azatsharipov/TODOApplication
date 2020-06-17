@@ -1,5 +1,6 @@
 package com.example.todoapplication;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.widget.LinearLayout;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
     DoAdapter adapter;
@@ -30,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         rv = findViewById(R.id.rv);
-        setDoings();
+        loadDoings();
         adapter = new DoAdapter(doings);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, LinearLayout.VERTICAL);
         rv.addItemDecoration(dividerItemDecoration);
@@ -43,12 +45,40 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         });
+        FloatingActionButton del = findViewById(R.id.bt_delete);
+        del.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ArrayList<Integer> selected = adapter.getSelected();
+                Collections.sort(selected, Collections.<Integer>reverseOrder());
+                for (int i : selected) {
+                    doings.remove(i);
+                }
+                adapter.notifyDataSetChanged();
+            }
+        });
+
     }
 
-    public void setDoings() {
+    public void loadDoings() {
         doings = new ArrayList<>();
-        doings.add(new Doing("First Header", "Some text in my application"));
-        doings.add(new Doing("Second very very very very very very long Header", "2 some very very very very very long text in my application and 2 some very very very very very long text in my application"));
+        SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        int size = sp.getInt("SIZE", 0);
+        for (int i = 0; i < size; i++) {
+            doings.add(new Doing(sp.getString("DOINGS_HEADER" + String.valueOf(i), ""),
+                    sp.getString("DOINGS_TEXT" + String.valueOf(i), "")));
+        }
+    }
+
+    public void saveDoings() {
+        SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor ed = sp.edit();
+        ed.putInt("SIZE", doings.size());
+        for (int i = 0; i < doings.size(); i++) {
+            ed.putString("DOINGS_HEADER" + String.valueOf(i), doings.get(i).getHeader());
+            ed.putString("DOINGS_TEXT" + String.valueOf(i), doings.get(i).getText());
+        }
+        ed.commit();
     }
 
     @Override

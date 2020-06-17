@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -13,18 +15,30 @@ import java.util.ArrayList;
 
 public class DoAdapter extends RecyclerView.Adapter<DoAdapter.MyViewHolder> {
     private ArrayList<Doing> doings;
+    private boolean isSelectedMode;
 
     public DoAdapter(ArrayList<Doing> doings) {
         this.doings = doings;
     }
 
+    public ArrayList<Integer> getSelected() {
+        ArrayList<Integer> selected = new ArrayList<>();
+        for (int i = 0; i < doings.size(); i++) {
+            if (doings.get(i).getSelected())
+                selected.add(i);
+        }
+        return selected;
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         TextView header;
         TextView doingText;
+        CheckBox cb;
         MyViewHolder(View view){
             super(view);
             header = (TextView) view.findViewById(R.id.header);
             doingText = (TextView) view.findViewById(R.id.doing_text);
+            cb = (CheckBox) view.findViewById(R.id.doing_cb);
         }
     }
 
@@ -45,22 +59,31 @@ public class DoAdapter extends RecyclerView.Adapter<DoAdapter.MyViewHolder> {
                 view.getContext().startActivity(intent);
             }
         });
+        /*
         v.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
                 return true;
             }
         });
+         */
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull DoAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull DoAdapter.MyViewHolder holder, final int position) {
         Doing doing = doings.get(position);
         holder.header.setText(doing.getHeader());
         holder.doingText.setText(doing.getText());
+        holder.cb.setChecked(doing.getSelected());
+        holder.cb.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                doings.get(position).setSelected(b);
+            }
+        });
     }
 
     @Override

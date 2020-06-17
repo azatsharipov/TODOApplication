@@ -23,4 +23,10 @@ public class EditActivity extends AppCompatActivity {
         EditText etDoing = findViewById(R.id.edit_doing);
         etDoing.setText(doing);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
 }
