@@ -1,16 +1,19 @@
 package com.example.todoapplication;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,7 +25,7 @@ import java.util.Collections;
 public class MainActivity extends AppCompatActivity {
     DoAdapter adapter;
     RecyclerView rv;
-    ArrayList<Doing> doings;
+    ArrayList<Doing> doings = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 doings.add(new Doing("New", ""));
+                saveDoings();
                 adapter.notifyDataSetChanged();
             }
         });
@@ -54,15 +58,22 @@ public class MainActivity extends AppCompatActivity {
                 for (int i : selected) {
                     doings.remove(i);
                 }
+                saveDoings();
                 adapter.notifyDataSetChanged();
             }
         });
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        loadDoings();
+        adapter.notifyDataSetChanged();
+    }
+
     public void loadDoings() {
-        doings = new ArrayList<>();
-        SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        doings.clear();
+        SharedPreferences sp = getSharedPreferences("doings", MODE_PRIVATE);
         int size = sp.getInt("SIZE", 0);
         for (int i = 0; i < size; i++) {
             doings.add(new Doing(sp.getString("DOINGS_HEADER" + String.valueOf(i), ""),
@@ -71,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void saveDoings() {
-        SharedPreferences sp = getPreferences(MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences("doings", MODE_PRIVATE);
         SharedPreferences.Editor ed = sp.edit();
         ed.putInt("SIZE", doings.size());
         for (int i = 0; i < doings.size(); i++) {

@@ -34,7 +34,7 @@ public class DoAdapter extends RecyclerView.Adapter<DoAdapter.MyViewHolder> {
         TextView header;
         TextView doingText;
         CheckBox cb;
-        MyViewHolder(View view){
+        MyViewHolder(View view) {
             super(view);
             header = (TextView) view.findViewById(R.id.header);
             doingText = (TextView) view.findViewById(R.id.doing_text);
@@ -56,7 +56,11 @@ public class DoAdapter extends RecyclerView.Adapter<DoAdapter.MyViewHolder> {
                 tv = (TextView)view.findViewById(R.id.doing_text);
                 String doingText = tv.getText().toString();
                 intent.putExtra("DOING", doingText);
-                view.getContext().startActivity(intent);
+                CheckBox cb = (CheckBox) view.findViewById(R.id.doing_cb);
+                intent.putExtra("POSITION", (int)cb.getTag());
+//                view.getContext().startActivity(intent);
+                MainActivity ma = (MainActivity) view.getContext();
+                ma.startActivityForResult(intent, 1);
             }
         });
         /*
@@ -84,6 +88,7 @@ public class DoAdapter extends RecyclerView.Adapter<DoAdapter.MyViewHolder> {
                 doings.get(position).setSelected(b);
             }
         });
+        holder.cb.setTag(position);
     }
 
     @Override
