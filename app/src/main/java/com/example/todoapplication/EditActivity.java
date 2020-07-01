@@ -2,6 +2,7 @@ package com.example.todoapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -30,7 +31,7 @@ public class EditActivity extends AppCompatActivity {
 
         etDoing = findViewById(R.id.edit_doing);
         etDoing.setText(doing);
-
+        
         TextWatcher onEdited = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
